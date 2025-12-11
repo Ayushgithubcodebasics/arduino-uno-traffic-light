@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arduino Traffic Light Project</title>
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    /* NAVBAR */
+    nav {
+      background: #000;
+      padding: 15px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    h1, h2 {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .section {
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    /* Traffic Lights */
+    .lightBox {
+      width: 160px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #222;
+      border-radius: 25px;
+    }
+    .light {
+      width: 90px;
+      height: 90px;
+      margin: 15px auto;
+      border-radius: 50%;
+      background: #333;
+    }
+    .on.red { background: red; }
+    .on.yellow { background: yellow; }
+    .on.green { background: lime; }
+
+    /* Buttons */
+    .btn {
+      display: block;
+      width: 220px;
+      padding: 15px;
+      margin: 12px auto;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .greenBtn { background: #00c853; }
+    .yellowBtn { background: #ffd600; color: black; }
+    .redBtn { background: #d50000; }
+    .autoBtn { background: dodgerblue; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav>
+    <a href="#overview">Overview</a>
+    <a href="#demo">Live Demo</a>
+    <a href="#hardware">Hardware</a>
+    <a href="#software">Software</a>
+    <a href="#timeline">Timeline</a>
+  </nav>
+
+  <!-- OVERVIEW -->
+  <div id="overview" class="section">
+    <h1>Arduino Traffic Light Project</h1>
+    <p>
+      This project simulates a real traffic light using an Arduino. It includes
+      both <b>manual</b> and <b>automatic</b> control modes. The webpage lets you
+      test how the LEDs behave, similar to the actual circuit.
+    </p>
+  </div>
+
+  <!-- LIVE DEMO -->
+  <div id="demo" class="section">
+    <h2>Live Traffic Light Simulation</h2>
+
+    <div class="lightBox">
+      <div id="redLight" class="light"></div>
+      <div id="yellowLight" class="light"></div>
+      <div id="greenLight" class="light"></div>
+    </div>
+
+    <button class="btn greenBtn" onclick="setLight('green')">Manual: Green</button>
+    <button class="btn yellowBtn" onclick="setLight('yellow')">Manual: Yellow</button>
+    <button class="btn redBtn" onclick="setLight('red')">Manual: Red</button>
+
+    <button class="btn autoBtn" onclick="startAuto()">▶ Start Auto Sequence</button>
+    <button class="btn autoBtn" onclick="stopAuto()">⏹ Stop Auto</button>
+  </div>
+
+  <!-- HARDWARE SECTION -->
+  <div id="hardware" class="section">
+    <h2>Hardware</h2>
+    <p>Components used:</p>
+    <ul>
+      <li>Arduino Uno</li>
+      <li>Red LED (Pin 5)</li>
+      <li>Yellow LED (Pin 4)</li>
+      <li>Green LED (Pin 3)</li>
+      <li>3300Ω resistors</li>
+    </ul>
+  </div>
+
+  <!-- SOFTWARE SECTION (UPDATED WITH IMAGE) -->
+  <div id="software" class="section">
+    <h2>Software</h2>
+    <p>This webpage follows the same logic as the Arduino sketch.</p>
+
+    <h3>Wiring Preview</h3>
+    <p>The following image shows the LED wiring on the Arduino Uno:</p>
+
+    <div style="text-align:center; margin:20px 0;">
+      <img src="traffic_light.png" alt="Arduino Traffic Light Wiring"
+           style="width:70%; max-width:650px; border-radius:12px; border:2px solid #444; box-shadow:0 0 15px rgba(255,255,255,0.15);">
+    </div>
+
+    <p><b>Wokwi Simulation Link:</b></p>
+    <p>
+      <a href="https://wokwi.com/projects/450071110628723713" target="_blank" style="color:skyblue;">
+        Click here to view the Wokwi Simulation
+      </a>
+    </p>
+  </div>
+
+  <!-- TIMELINE -->
+  <!-- TIMELINE -->
+<div id="timeline" class="section">
+  <h2>Timeline</h2>
+  <p><b>Date Completed:</b> 12 December 2025</p>
+  <ul>
+    <li>Selected project idea: Arduino Traffic Light System</li>
+    <li>Gathered components (Arduino Uno, LEDs, resistors, wires)</li>
+    <li>Designed circuit layout for Red/Yellow/Green LEDs</li>
+    <li>Built the circuit in Wokwi</li>
+    <li>Assigned LED pins (Green: 3, Yellow: 4, Red: 5)</li>
+    <li>Wrote initial Arduino code</li>
+    <li>Created manual LED control functions</li>
+    <li>Developed automatic traffic cycle logic</li>
+    <li>Tested LED timing and logic in Wokwi</li>
+    <li>Fixed delays and loop conditions</li>
+    <li>Added serial debug messages</li>
+    <li>Finalized Wokwi simulation</li>
+    <li>Created complete web-based simulation UI</li>
+    <li>Implemented manual and auto buttons using JavaScript</li>
+    <li>Added LED graphics and CSS styling</li>
+    <li>Inserted wiring image into Software section</li>
+    <li>Added SVG program flowchart</li>
+    <li>Final testing and documentation completed</li>
+  </ul>
+</div>
+
+
+  <!-- JAVASCRIPT -->
+  <script>
+    let autoMode = false;
+
+    function clearLights() {
+      document.getElementById('redLight').className = 'light';
+      document.getElementById('yellowLight').className = 'light';
+      document.getElementById('greenLight').className = 'light';
+    }
+
+    function setLight(color) {
+      clearLights();
+      if (color === 'red') document.getElementById('redLight').classList.add('on','red');
+      if (color === 'yellow') document.getElementById('yellowLight').classList.add('on','yellow');
+      if (color === 'green') document.getElementById('greenLight').classList.add('on','green');
+    }
+
+    async function startAuto() {
+      autoMode = true;
+      while (autoMode) {
+        setLight('green');
+        await sleep(5000);
+        if (!autoMode) break;
+
+        setLight('yellow');
+        await sleep(2000);
+        if (!autoMode) break;
+
+        setLight('red');
+        await sleep(5000);
+        if (!autoMode) break;
+
+        setLight('yellow');
+        await sleep(2000);
+      }
+    }
+
+    function stopAuto() {
+      autoMode = false;
+      clearLights();
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+  </script>
+  <!-- FLOWCHART SECTION -->
+<div id="flowchart" class="section">
+  <h2>Flowchart</h2>
+  <p>Overall program flow — automatic and manual modes.</p>
+
+  <div style="text-align:center;">
+    <svg width="900" height="520" viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style> 
+          .box { fill:#1e1e1e; stroke:#fff; stroke-width:2; } 
+          .text { fill:#fff; font-family:Arial; font-size:14px; } 
+          .arrow { fill:none; stroke:#fff; stroke-width:2; marker-end:url(#arrowhead); }
+        </style>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#fff" />
+        </marker>
+      </defs>
+
+      <!-- Start -->
+      <rect x="380" y="10" width="140" height="40" rx="10" class="box" />
+      <text x="450" y="35" class="text" text-anchor="middle">Start</text>
+
+      <!-- Init -->
+      <rect x="320" y="70" width="260" height="50" rx="8" class="box" />
+      <text x="450" y="100" class="text" text-anchor="middle">Initialize (pinMode, Serial)</text>
+      <line x1="450" y1="50" x2="450" y2="70" class="arrow" />
+
+      <!-- Mode decision -->
+      <rect x="320" y="140" width="260" height="50" rx="8" class="box" />
+      <text x="450" y="170" class="text" text-anchor="middle">Mode? (Auto / Manual)</text>
+      <line x1="450" y1="120" x2="450" y2="140" class="arrow" />
+
+      <!-- Auto branch -->
+      <rect x="60" y="220" width="320" height="250" rx="10" class="box" />
+      <text x="220" y="245" class="text" text-anchor="middle">AUTOMATIC SEQUENCE</text>
+
+      <rect x="120" y="270" width="200" height="40" rx="6" class="box" />
+      <text x="220" y="295" class="text" text-anchor="middle">Green ON (5s)</text>
+
+      <rect x="120" y="320" width="200" height="40" rx="6" class="box" />
+      <text x="220" y="345" class="text" text-anchor="middle">Yellow ON (2s)</text>
+
+      <rect x="120" y="370" width="200" height="40" rx="6" class="box" />
+      <text x="220" y="395" class="text" text-anchor="middle">Red ON (5s)</text>
+
+      <rect x="120" y="420" width="200" height="40" rx="6" class="box" />
+      <text x="220" y="445" class="text" text-anchor="middle">Yellow ON (2s) → loop</text>
+
+      <!-- Manual branch -->
+      <rect x="520" y="220" width="320" height="250" rx="10" class="box" />
+      <text x="680" y="245" class="text" text-anchor="middle">MANUAL MODE</text>
+
+      <rect x="580" y="280" width="200" height="40" rx="6" class="box" />
+      <text x="680" y="305" class="text" text-anchor="middle">Wait for Button Press</text>
+
+      <rect x="580" y="330" width="200" height="40" rx="6" class="box" />
+      <text x="680" y="355" class="text" text-anchor="middle">If Green Button → Green ON</text>
+
+      <rect x="580" y="380" width="200" height="40" rx="6" class="box" />
+      <text x="680" y="405" class="text" text-anchor="middle">If Yellow Button → Yellow ON</text>
+
+      <rect x="580" y="430" width="200" height="40" rx="6" class="box" />
+      <text x="680" y="455" class="text" text-anchor="middle">If Red Button → Red ON</text>
+
+      <!-- Arrows from mode decision -->
+      <path d="M450 190 L220 220" class="arrow" />
+      <path d="M450 190 L680 220" class="arrow" />
+
+      <!-- Loop arrow -->
+      <path d="M320 480 L320 500 L580 500 L580 480" class="arrow" />
+      <path d="M450 500 L450 480" class="arrow" />
+    </svg>
+  </div>
+</div>
+
+
+</body>
+</html>
