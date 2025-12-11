@@ -48,5 +48,3 @@ The wiring diagram is included:
 *traffic_light.png*
 
 ---
-
-## 📂 Repository Contents
